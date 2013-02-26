@@ -1,0 +1,54 @@
+This is a port of the modern LAPACKE bindings to J.
+The original J addon for Lapack depended on CLAPACK
+building a functional shared library. It doesn't seem
+to support 64 bit linux, which is what I use, and
+anyway, CLAPACK is preposterously out of date. LAPACKE
+is apparently the modern way to do things. 
+
+LAPACKE bindings make more sense, and will probably
+work faster. They also allow for "native" row major, amd 
+are long term more maintainable. The important change here
+is lcall in lapack.ijs. It is oogly, because I am not yet
+good at J, but it does what it is supposed to, and will 
+hopefully improve over time with my skills. 
+
+geev seems to work, though it is not thoroughly tested. I
+don't understand the test script, but it ties out with
+values in R.
+
+
+I (or someone else) will eventually work through all the other 
+files. In this order, probably (gesvd kind of works).
+
+NB. gesvd  singular value decomposition (SVD) of a matrix
+NB. gesv   solves the system A * X = B  (done, untested)
+NB. gesvx   solves the system A * X = B (crashes J)
+NB. gels   solves overdetermined or underdetermined systems (does something)
+NB. gelss   computes the minimum norm solution to a linear (crashes J)
+NB.         least squares problem using the SVD
+NB. getrf LU factorization of a general M-by-N matrix (does something)
+NB. geqlf  QL factorization of a M-by-N matrix
+NB. geqrf  QR factorization of a M-by-N matrix (does something)
+NB. gerqf  RQ factorization of a M-by-N matrix 
+NB. heev   eigenvalues and eigenvectors of a square matrix (works)
+NB. potrf   Cholesky factorization of a symmetric (Hermitian) (part done)
+NB. trtrs   solves a triangular system A * X = B
+NB. gees   Schur factorization of a square matrix
+NB. gebal  balances a general square matrix
+NB. gehrd   reduce a general square matrix to upper
+NB.         Hessenberg form
+NB. gelqf  LQ factorization of a M-by-N matrix
+NB. potrf   Cholesky factorization of a symmetric (Hermitian)
+NB.         positive definite matrix
+
+
+
+Mostly, this is a place to store my addons/math/lapack 
+until this is all done. I may only get to these intermittently,
+as I generally have more need for eigenvalues than anything else.
+The pattern established in geev should be fine for all the
+others.
+
+
+
+
