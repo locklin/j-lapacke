@@ -12,6 +12,28 @@ is lcall in lapack.ijs. It is oogly, because I am not yet
 good at J, but it does what it is supposed to, and will 
 hopefully improve over time with my skills. 
 
+I used the latest lapack, lapack-3.4.2 to build the 
+library. 
+http://www.netlib.org/lapack/#_lapack_version_3_4_2_2
+
+Building is simple:
+cmake-gui 
+cmake-gui: select build and source dirs
+cmake-gui: select lapacke and optimized blas if desired 
+cmake-gui: -> configure, generate
+cmake . (at the command line to make sure you have the dependencies)
+make
+
+from there, copy lib/lapacke.so to 
+~/j-lapacke/lapack.so
+
+Unfortunately, distributing a shared library is presently
+problematic, as lapacke is linked to several things, and
+most Linux distributions don't have lapack libs which support
+the lapacke bindings. I also don't want to do this again, when
+linux catches up with what netlib/lapack are doing.
+
+
 geev seems to work, though it is not thoroughly tested. I
 don't understand the test script, but it ties out with
 values in R.
