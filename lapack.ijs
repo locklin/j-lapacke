@@ -268,7 +268,7 @@ path=: jpath '~addons/math/lapack/'
 
 3 : 0''
 if. UNAME-:'Linux' do.
-  dll=: '"',path,'lapacke.so" '
+  dll=: '"',path,'lapack.so" '
 elseif. UNAME-:'Darwin' do.
   dll=: '/System/Library/Frameworks/vecLib.framework/vecLib '
 elseif. UNAME-:'Win' do.
