@@ -266,9 +266,37 @@ NB. lapack definitions
 
 path=: jpath '~addons/math/lapack/'
 
+
 3 : 0''
+if. IF64 *. UNAME-:'Win' do.
+  '64-bit not supported' 13!:8[10
+end.
 if. UNAME-:'Linux' do.
-  dll=: '"',path,'lapack.so" '
+  FHS=. (FHS"_)^:(0=4!:0<'FHS') (0)
+  if. 0=FHS do.
+    if. IF64 do.
+NB.      dll=: '"',path,'lapack64.so" '
+    dll=: '"/usr/local/lib/liblapacke.so" '
+    else.
+      dll=: '"',path,'lapack',(IFRASPI#'_raspi32'),'.so" '
+    end.
+  elseif. 1=FHS do.
+    if. IF64 do.
+      dll=: '/usr/lib/lapack64.so '
+    else.
+      dll=: '/usr/lib/lapack',(IFRASPI#'_raspi32'),'.so '
+    end.
+  elseif. 2=FHS do.
+    if. IF64 do.
+      dll=: '/usr/lib/x86_64-linux-gnu/lapack64.so '
+    else.
+      if. IFRASPI do.
+        dll=: '/usr/lib/arm-linux-gnueabihf/lapack_raspi32.so '
+      else.
+        dll=: '/usr/lib/i386-linux-gnu/lapack.so '
+      end.
+    end.
+  end.
 elseif. UNAME-:'Darwin' do.
   dll=: '/System/Library/Frameworks/vecLib.framework/vecLib '
 elseif. UNAME-:'Win' do.
@@ -284,38 +312,38 @@ typeof=: 3!:0 NB. need this to suss out what types we have
 NB. =========================================================
 NB. modified caller for LAPACKE; use routine lcall >each ".arg
 lcall=: 4 : 0
-rnks=. 2<:>(# each y)
-types=. >typeof each y
-idx=. i.#types
-outstr=. (#types) #< 'i'
-outstr=.(<'i') ((4 E. types) #idx) }outstr
-outstr=.(<'d') ((8 E. types) #idx) }outstr
-outstr=.(<'c') ((2 E. types) #idx) }outstr  NB.chars are risky
-outstr=.(<'j') ((16 E. types) #idx) }outstr
-outstr=.(('*',.{.) each (rnks#idx){outstr ) (rnks#idx)}outstr
-caller=: ; ' ', each outstr
-xx=. dll,x,' + i',caller
+ rnks=. 2<:>(# each y)
+ types=. >typeof each y
+ idx=. i.#types
+ outstr=. (#types) #< 'i'
+ outstr=.(<'i') ((4 E. types) #idx) }outstr
+ outstr=.(<'d') ((8 E. types) #idx) }outstr
+ outstr=.(<'c') ((2 E. types) #idx) }outstr  NB.chars are risky
+ outstr=.(<'j') ((16 E. types) #idx) }outstr
+ outstr=.(('*',.{.) each (rnks#idx){outstr ) (rnks#idx)}outstr
+ caller=: ; ' ', each outstr
+ xx=. dll,x,' + i',caller
  r=. xx cd LASTIN=: y
-if. > {. r do.
-  error x;'lapack dll return code: ',": > {. r
-else.
-  LASTOUT=: }.r
-end.
+ if. > {. r do.
+   error x;'lapack dll return code: ',": > {. r
+ else.
+   LASTOUT=: }.r
+ end.
 )
 
 NB. =========================================================
 docs=: 3 : 0
-if. 0>4!:0 <'dirs' do. load 'dir' end.
-dirs jpathsep path,'doc/*.lap'
+ if. 0>4!:0 <'dirs' do. load 'dir' end.
+ dirs jpathsep path,'doc/*.lap'
 )
 
 NB. =========================================================
 need=: 3 : 0
-require (<path) ,each (;:y) ,each <'.ijs'
+ require (<path) ,each (;:y) ,each <'.ijs'
 )
 
 NB. =========================================================
 routines=: 3 : 0
 if. 0>4!:0 <'dirs' do. load 'dir' end.
-dirs jpathsep path,'*.ijs'
+ dirs jpathsep path,'*.ijs'
 )

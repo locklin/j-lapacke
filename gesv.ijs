@@ -70,7 +70,9 @@ b=. zero + mvb
 
 arg=. 'ROWMAJOR;n;nrhs;a;lda;ipiv;b;ldb'
 
-(cutarg arg)=. routine lcall > each ".arg
+if. n>0 do.
+ (cutarg arg)=. routine lcall > each ".arg
+end.
 
 NB. this is probably helpful ... figure out what the cutarg arg thing means, then use the retval
 NB. if. info~:0 do.

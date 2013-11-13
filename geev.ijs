@@ -28,95 +28,87 @@ NB.   ((+|:L) mp A)  is  (V * +|:L)  is  ((diag V) mp (+|:L))
 
 geev=: (2b111&$: : (4 : 0)) " 0 2
 
-y=. z2d y
-ic=. iscomplex y
-zero=. ic {:: dzero ; zzero
-routine=. ic { 'LAPACKE_dgeev' ,: 'LAPACKE_zgeev'
-iox=: >ic { 8 ; 6 7 NB. this fixes up the selecter for LAPACKE
+ y=. z2d y
+ ic=. iscomplex y
+ zero=. ic {:: dzero ; zzero
+ routine=. ic { 'LAPACKE_dgeev' ,: 'LAPACKE_zgeev'
+ iox=: >ic { 8 ; 6 7 NB. this fixes up the selecter for LAPACKE
 
-if. (-. 0 1 -: x I. 1 8) +. ((0 ~: #@$) +. (0 -: ]) +. (0 ~: L.)) x do.
-  error routine;'RMASK should be an integer in range [1,7]'
-end.
+ if. (-. 0 1 -: x I. 1 8) +. ((0 ~: #@$) +. (0 -: ]) +. (0 ~: L.)) x do.
+   error routine;'RMASK should be an integer in range [1,7]'
+ end.
 
-vsquare y
+ vsquare y
 
-sa=. |.$y
-'isvl isvr'=. isv=. 0 ~: 2b100 2b001 (17 b.) x
-'svli svri'=. isv { 0 0 ,: sa
+ sa=. |.$y
+ 'isvl isvr'=. isv=. 0 ~: 2b100 2b001 (17 b.) x
+ 'svli svri'=. isv { 0 0 ,: sa
 
-'jobvl jobvr'=. isv { 'NV'
-n=. #y
-a=. zero + |:y
-lda=. ldvl=. ldvr=. 1 >. n
-if. ic do.
-  w=. n$zero
-else.
-  wr=. wi=. n$zero
-end.
-vl=. svli$zero
-vr=. svri$zero
-
-NB. this stuff can all go
-NB. lwork=. 1 >. 34*n
-NB. work=. lwork$zero
-NB. if. ic do.
-NB.   rwork=. (+: n) $ dzero
-NB. end.
-NB. info=. izero
-
-arg=: iox xtoken 'ROWMAJOR;jobvl;jobvr;n;a;lda;wr;wi;w;vl;ldvl;vr;ldvr'
-
-(cutarg arg)=. routine lcall >each ".arg
-NB.
-NB. if. info~:0 do.
-NB.   error routine;'info result: ',":info return.
-NB. end.
-NB.
+ 'jobvl jobvr'=. isv { 'NV'
+ n=. #y
+ a=. zero + |:y
+ lda=. ldvl=. ldvr=. 1 >. n
+ if. ic do.
+   w=. n$zero
+ else.
+   wr=. wi=. n$zero
+ end.
+ vl=. svli$zero
+ vr=. svri$zero
 
 
-NB. +++++++++++++++++++++++++++++++++++++ this needs fixing
-NB. vl=. |:svli$vl
+ arg=: iox xtoken 'ROWMAJOR;jobvl;jobvr;n;a;lda;wr;wi;w;vl;ldvl;vr;ldvr'
+
+
+ if. n>0 do.
+   (cutarg arg)=. routine lcall >each ".arg
+ end.
+
+
+
+NB. +++++++++++++++++++++++++++++++++++++ this may need attention
+NB. vl=. |:svli$vl  NB. is this for column major?
 NB. vr=. |:svri$vr
 
-if. -. ic do.
-  w=. wr
-  if. 1 e. wi ~: 0 do.
-    if. 2b010 (17 b.) x do.
-      w=. w j. wi
-    end.
-    if. isvl +. isvr do.
-      cx=. I. wi ~: 0
-      if. isvl do.
-        vl=. cx cxpair vl
-      end.
-      if. isvr do.
-        vr=. cx cxpair vr
-      end.
-    end.
-  end.
-end.
+ if. -. ic do.
+   w=. wr
+   if. 1 e. wi ~: 0 do.
+     if. 2b010 (17 b.) x do.
+       w=. w j. wi
+     end.
+     if. isvl +. isvr do.
+       cx=. I. wi ~: 0
+       if. isvl do.
+         vl=. cx cxpair vl
+       end.
+       if. isvr do.
+         vr=. cx cxpair vr
+       end.
+     end.
+   end.
+ end.
 
-({. @: > ^: (1=#)) (I. _3 {. #: x) { vl;w;vr
+ ({. @: > ^: (1=#)) (I. _3 {. #: x) { vl;w;vr
 )
 
 NB. =========================================================
 NB.*tgeev v test geev
 
 tgeev=: 3 : 0
-match=. matchclean;;
-smoutput 'L V R'=. geev y
-smoutput a=. (clean y mp R) match (clean V *"1 R)
-smoutput b=. (clean (+|:L) mp y) match (clean V * +|:L)
-(0 pick a) *. 0 pick b
+ match=. matchclean;;
+ smoutput 'L V R'=. geev y
+ smoutput a=. (clean y mp R) match (clean V *"1 R)
+ smoutput b=. (clean (+|:L) mp y) match (clean V * +|:L)
+ (0 pick a) *. 0 pick b
 )
 
 NB. =========================================================
 NB. test matrices:
 
 testgeev=: 3 : 0
-m0=. 0 0$0
-m1=. ?.6 6$10
-m2=. 0 0$zzero
-m3=. j./ ?.2 6 6$10
-tgeev &> m0;m1;m2;m3
+ m0=. 0 0$0
+ m1=. ?.6 6$10
+ m2=. 0 0$zzero
+ m3=. j./ ?.2 6 6$10
+ tgeev &> m0;m1;m2;m3
 )
