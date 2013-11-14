@@ -79,11 +79,11 @@ rank=. izero
 sa=. $a
 sb=. $b
 
-arg=. 'ROWMAJOR;m;n;nrhs;a;lda;b;ldb;s;rcond;rank'
+arg=. 'COLMAJOR;m;n;nrhs;a;lda;b;ldb;s;rcond;rank'
 
-
-(cutarg arg)=. routine lcall > each ".arg
-
+if. n>0 do.
+ (cutarg arg)=. routine lcall > each ".arg
+end.
 
 if. 2b1000 (17 b.) x do.
   b=. n {. (|: @: (sb & $))^:(ismatrix mvb) b
@@ -112,28 +112,28 @@ NB. test matrices:
 testgelss=: 3 : 0
 dma0=. 0 0$0
 dmb0=. 0 0$0
-dma1=. ? 10 5$100          NB. match fails for this pair since solution is least squares
-dmb1=. ? 10 3$50
-dma2=. ? 5 10$100
-dmb2=. ? 5 3$50
+dma1=. ?. 10 5$100          NB. match fails for this pair since solution is least squares
+dmb1=. ?. 10 3$50
+dma2=. ?. 5 10$100
+dmb2=. ?. 5 3$50
 dma3=. 0 0$0
 dvb3=. 0$0
-dma4=. ? 10 5$100          NB. match fails for this pair since solution is least squares
-dvb4=. ? 10$50
-dma5=. ? 5 10$100
-dvb5=. ? 5$50
+dma4=. ?. 10 5$100          NB. match fails for this pair since solution is least squares
+dvb4=. ?. 10$50
+dma5=. ?. 5 10$100
+dvb5=. ?. 5$50
 zma0=. 0 0$zzero
 zmb0=. 0 0$zzero
-zma1=. j./ ? 2 10 5$100    NB. match fails for this pair since solution is least squares
-zmb1=. j./ ? 2 10 3$50
-zma2=. j./ ? 2 5 10$100
-zmb2=. j./ ? 2 5 3$50
+zma1=. j./ ?. 2 10 5$100    NB. match fails for this pair since solution is least squares
+zmb1=. j./ ?. 2 10 3$50
+zma2=. j./ ?. 2 5 10$100
+zmb2=. j./ ?. 2 5 3$50
 zma3=. 0 0$zzero
 zvb3=. 0$zzero
-zma4=. j./ ? 2 10 5$100    NB. match fails for this pair since solution is least squares
-zvb4=. j./ ? 2 10$50
-zma5=. j./ ? 2 5 10$100
-zvb5=. j./ ? 2 5$50
+zma4=. j./ ?. 2 10 5$100    NB. match fails for this pair since solution is least squares
+zvb4=. j./ ?. 2 10$50
+zma5=. j./ ?. 2 5 10$100
+zvb5=. j./ ?. 2 5$50
 tgelss &> (< dma0;dmb0) , (< dma1;dmb1) , (< dma2;dmb2) , (< dma3;dvb3) , (< dma4;dvb4) , (< dma5;dvb5) , (< zma0;zmb0) , (< zma1;zmb1) , (< zma2;zmb2) , (< zma3;zvb3) , (< zma4;zvb4) , (< zma5;zvb5)
 )
 

@@ -57,7 +57,7 @@ geev=: (2b111&$: : (4 : 0)) " 0 2
  vr=. svri$zero
 
 
- arg=: iox xtoken 'ROWMAJOR;jobvl;jobvr;n;a;lda;wr;wi;w;vl;ldvl;vr;ldvr'
+ arg=: iox xtoken 'COLMAJOR;jobvl;jobvr;n;a;lda;wr;wi;w;vl;ldvl;vr;ldvr'
 
 
  if. n>0 do.

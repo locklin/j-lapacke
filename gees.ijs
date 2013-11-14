@@ -40,8 +40,8 @@ end.
 y=. z2d y
 ic=. (2b0001 (17 b.) x) +. (iscomplex y)
 zero=. ic {:: dzero ; zzero
-routine=. ic { 'dgees' ,: 'zgees'
-iox=. ic { 9 14 ,: 7 8
+routine=. ic { 'LAPACKE_dgees' ,: 'LAPACKE_zgees'
+iox=. ic { 10 ,: 8 9  
 
 vsquare y
 
@@ -63,18 +63,14 @@ else.
   wr=. wi=. n$zero
 end.
 vs=. svsi$zero
-lwork=. 1 >. 34*n
-work=. lwork$zero
-bwork=. n$izero
-info=. izero
 
-arg=. iox xtoken 'jobvs;sort;select;n;a;lda;sdim;wr;wi;w;vs;ldvs;work;lwork;rwork;bwork;info'
 
-(cutarg arg)=. routine call , each ".arg
+arg=. iox xtoken 'COLMAJOR;jobvs;sort;select;n;a;lda;sdim;wr;wi;w;vs;ldvs'
 
-if. info~:0 do.
-  error routine;'info result: ',":info return.
+if. n>0 do.
+ (cutarg arg)=. routine lcall > each ".arg
 end.
+
 
 if. 2b1000 (17 b.) x do.
   vs=. |:svsi$vs

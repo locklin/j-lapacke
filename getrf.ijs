@@ -48,21 +48,22 @@ vmatrix y
 si=. |. 'm n'=. s=. $y
 mn=. m <. n
 lda=. 1 >. m
-a=. zero + y
+a=. zero + |:y
 ipiv=. mn$izero
 
 
-arg=. 'ROWMAJOR;m;n;a;lda;ipiv'
+arg=. 'COLMAJOR;m;n;a;lda;ipiv'
 
+if. n>0 do.
 (cutarg arg)=. routine lcall > each ".arg
-
+end.
 
 u=. l=. izero
 
 if. 2b110 (17 b.) x do.
-  a=. si$a
+  a=. |:si$a
   if. 2b100 (17 b.) x do.
-    l=. (idmat s) + sltri a
+    l=. (idmat s) + sltri a NB. the problem is here, or the above line
     if. m < n do.
       l=. (_,mn) {. l
     end.

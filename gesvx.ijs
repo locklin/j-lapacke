@@ -98,10 +98,10 @@ a=. zero + |:ma
 lda=. ldaf=. ldb=. ldx=. 1 >. n
 af=. sa$zero
 ipiv=. n$izero
-equed=. ' '
+equed=. ' ' NB. selector here?
 r=. c=. n$dzero
 b=. zero + |:mvb
-x=. sb$zero
+xx=. sb$zero
 rcond=. dzero
 ferr=. berr=. nrhs$dzero
 if. ic do.
@@ -111,11 +111,11 @@ else.
 end.
 
 
-arg=. 'ROWMAJOR;fact;trans;n;nrhs;a;lda;af;ldaf;ipiv;equed;r;c;b;ldb;x;ldx;rcond;ferr;berr;work'
+arg=. 'COLMAJOR;fact;trans;n;nrhs;a;lda;af;ldaf;ipiv;equed;r;c;b;ldb;xx;ldx;rcond;ferr;berr;work'
 
-
+if. n>0 do.
 (cutarg arg)=. routine lcall > each ".arg
-
+end.
 
 u=. l=. izero
 

@@ -53,15 +53,16 @@ gesvd=: (2b111&$: : (4 : 0)) " 0 2
  svt=. isvt { 0 0 ,: n,n
 
  'jobu jobvt'=. isv { 'NA'
- a=. zero + y
- lda=. 1>.n
- ldu=. 1>.m 
+ a=. zero + |:y
+ NB. lda=. 1>.n
+ NB. ldu=. 1>.m 
+lda=. ldu=. 1>.m
  s=. mn$dzero
  u=. sui$zero
  ldvt=. 1>.n
  vt=. svt$zero
 
- arg=.'ROWMAJOR;jobu;jobvt;m;n;a;lda;s;u;ldu;vt;ldvt;superb'
+ arg=.'COLMAJOR;jobu;jobvt;m;n;a;lda;s;u;ldu;vt;ldvt;superb'
 
  if. n>0 do.
    superb=. (mn-1)#dzero NB. always double

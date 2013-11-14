@@ -39,94 +39,90 @@ NB.   P =. makepermat IPIV
 
 gesv=: (2b1000&$: : (4 : 0)) " 0 1
 
-y=. z2d each y
-ic=. +./ iscomplex &> y
-zero=. ic {:: dzero ; zzero
-routine=. ic { 'LAPACKE_dgesv' ,: 'LAPACKE_zgesv'
-rmask=. x
-'ma mvb'=. y
+ y=. z2d each y
+ ic=. +./ iscomplex &> y
+ zero=. ic {:: dzero ; zzero
+ routine=. ic { 'LAPACKE_dgesv' ,: 'LAPACKE_zgesv'
+ rmask=. x
+ 'ma mvb'=. y
 
-if. (-. 0 1 -: x I. 1 16) +. ((0 ~: #@$) +. (0 -: ]) +. (0 ~: L.)) rmask do.
-  error routine;'RMASK should be an integer in range [1,15]'
-end.
+ if. (-. 0 1 -: x I. 1 16) +. ((0 ~: #@$) +. (0 -: ]) +. (0 ~: L.)) rmask do.
+   error routine;'RMASK should be an integer in range [1,15]'
+ end.
 
-vsquare ma
-vmatrixorvector mvb
+ vsquare ma
+ vmatrixorvector mvb
 
-n=. #ma
-if. n ~: #mvb do.
-  error routine;'matrices should have the same number of rows'
-end.
+ n=. #ma
+ if. n ~: #mvb do.
+   error routine;'matrices should have the same number of rows'
+ end.
 
-sa=. |.$ma
-sb=. |.$mvb
+ sa=. |.$ma
+ sb=. |.$mvb
 
-nrhs=. {: 2 ($!.1) $mvb
-a=. zero + ma
-lda=. ldb=. 1 >. n
-ipiv=. n$izero
-b=. zero + mvb
+ nrhs=. {: 2 ($!.1) $mvb
+ a=. zero + |:ma
+ lda=. ldb=. 1 >. n
+ ipiv=. n$izero
+ b=.  zero + |:mvb
 
 
-arg=. 'ROWMAJOR;n;nrhs;a;lda;ipiv;b;ldb'
+ arg=. 'COLMAJOR;n;nrhs;a;lda;ipiv;b;ldb'
 
-if. n>0 do.
- (cutarg arg)=. routine lcall > each ".arg
-end.
+ if. n>0 do.
+  (cutarg arg)=. routine lcall > each ".arg
+ end.
 
-NB. this is probably helpful ... figure out what the cutarg arg thing means, then use the retval
-NB. if. info~:0 do.
-NB.   error routine;'info result: ',":info return.
-NB. end.
 
-u=. l=. izero
+ u=. l=. izero
 
-if. 2b1000 (17 b.) rmask do.
- NB. b=. ( @: (sb & $))^:(ismatrix mvb) b
-end.
-if. 2b0110 (17 b.) x do.
+ if. 2b1000 (17 b.) rmask do.
+  NB. b=. ( @: (sb & $))^:(ismatrix mvb) b
+ end.
+ if. 2b0110 (17 b.) x do.
  NB. a=. sa$a
-  if. 2b0100 (17 b.) x do.
-    l=. (idmat sa) + sltri a
-  end.
-  if. 2b0010 (17 b.) rmask do.
-    u=. utri a
-  end.
-end.
+   if. 2b0100 (17 b.) x do.
+     l=. (idmat sa) + sltri a
+   end.
+   if. 2b0010 (17 b.) rmask do.
+     u=. utri a
+   end.
+ end.
 
-({. @: > ^: (1=#)) (I. _4 {. #: rmask) { b;l;u;ipiv
+ ({. @: > ^: (1=#)) (I. _4 {. #: rmask) { b;l;u;ipiv
 )
 
 NB. =========================================================
 NB.*tgesv v test gesv
 
 tgesv=: 3 : 0
-'a b'=. y
-match=. matchclean;;
-smoutput x=. gesv y
-smoutput r=. b match clean a mp x
-0 pick r
+ 'a b'=. y
+ match=. matchclean;;
+ smoutput x=. gesv y
+ smoutput r=. b match clean a mp x
+ 0 pick r
 )
 
 NB. =========================================================
 NB. test matrices:
 
 testgesv=: 3 : 0
-ma0=. 0 0$0
-mb0=. 0 0$0
-ma1=. ? 10 10$100
-mb1=. ? 10 5$50
-ma2=. 0 0$zzero
-mb2=. 0 0$zzero
-ma3=. j./ ? 2 10 10$100
-mb3=. j./ ? 2 10 5$50
-ma4=. 0 0$0
-vb4=. 0$0
-ma5=. ? 10 10$100
-vb5=. ? 10$50
-ma6=. 0 0$zzero
-vb6=. 0$zzero
-ma7=. j./ ? 2 10 10$100
-vb7=. j./ ? 2 10$50
-tgesv &> (< ma0;mb0) , (< ma1;mb1) , (< ma2;mb2) , (< ma3;mb3) , (< ma4;vb4) , (< ma5;vb5) , (< ma6;vb6) , (< ma7;vb7)
+ ma0=. 0 0$0
+ mb0=. 0 0$0
+ ma1=. ? 10 10$100
+ mb1=. ? 10 5$50
+ ma2=. 0 0$zzero
+ mb2=. 0 0$zzero
+ ma3=. j./ ? 2 10 10$100
+ mb3=. j./ ? 2 10 5$50
+ ma4=. 0 0$0
+ vb4=. 0$0
+ ma5=. ? 10 10$100
+ vb5=. ? 10$50
+ ma6=. 0 0$zzero
+ vb6=. 0$zzero
+ ma7=. j./ ? 2 10 10$100
+ vb7=. j./ ? 2 10$50
+ tgesv &> (< ma0;mb0) , (< ma1;mb1) , (< ma2;mb2) , (< ma3;mb3) , (< ma4;vb4) , (< ma5;vb5) , (< ma6;vb6) , (< ma7;vb7)
 )

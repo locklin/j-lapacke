@@ -40,15 +40,13 @@ uplo=. 'L'
 n=. #y
 a=. zero + y
 lda=. 1 >. n
-info=. izero
 
-arg=. 'ROWMAJOR;uplo;n;a;lda;info'
+arg=. 'COLMAJOR;uplo;n;a;lda'
 
+if. n > 0 do.
 (cutarg arg)=. routine lcall > each ".arg
-
-if. info~:0 do.
-  error routine;'info result: ',":info return.
 end.
+
 
 ltri (n,n)$a
 )

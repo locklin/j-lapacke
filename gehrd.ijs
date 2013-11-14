@@ -50,7 +50,7 @@ gehrd=: (2b0011&$: : (4 : 0)) " 0 1
 'ma ilo ihi'=. y
 ic=. iscomplex ma
 zero=. ic {:: dzero ; zzero
-routine=. ic { 'dgehrd' ,: 'zgehrd'
+routine=. ic { 'LAPACKE_dgehrd' ,: 'LAPACKE_zgehrd'
 
 if. (-. 0 1 -: x I. 1 16) +. ((0 ~: #@$) +. (0 -: ]) +. (0 ~: L.)) x do.
   error routine;'RMASK should be an integer in range [1,15]'
@@ -70,17 +70,13 @@ ihi=. izero + ihi
 a=. zero + |:ma
 lda=. 1 >. n
 tau=. (0 >. n-1)$zero  NB. '>.' to fix case 0=n
-lwork=. 1 >. n
-work=. lwork$zero
-info=. izero
 
-arg=. 'n;ilo;ihi;a;lda;tau;work;lwork;info'
+arg=. 'COLMAJOR;n;ilo;ihi;a;lda;tau'
 
-(cutarg arg)=. routine call , each ". arg
-
-if. info~:0 do.
-  error routine;'info result: ',":info return.
+if. n>0 do.
+(cutarg arg)=. routine lcall > each ". arg
 end.
+
 
 a=. |:sa$a
 h=. q=. izero

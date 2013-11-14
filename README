@@ -40,28 +40,36 @@ values in R.
 
 
 I (or someone else) will eventually work through all the other 
-files. In this order, probably (gesvd kind of works).
+files. In this order, probably
 
-NB. gesvd  singular value decomposition (SVD) of a matrix
-NB. gesv   solves the system A * X = B  (done, untested)
+NB. heev   eigenvalues and eigenvectors of a square matrix (works)
+NB. gels   solves overdetermined or underdetermined systems (works, tested)
+NB. gesv   solves the system A * X = B  (done, works; tested)
+NB. gesvd  singular value decomposition (SVD) of a matrix (done, works, has a few oddities to think about first)
+NB. potrf   Cholesky factorization of a symmetric (Hermitian) (works, needs numeric testing)
+NB. trtrs   solves a triangular system A * X = B (mostly done; minor fixes needed + testing)
+NB. potrf   Cholesky factorization of a symmetric (Hermitian)
+NB.         positive definite matrix                           (numeric testing needed)
+
+NB. gees   Schur factorization of a square matrix (type error)
+
+NB. getrf LU factorization of a general M-by-N matrix (sltri part doesn't work)
+NB. geqlf  QL factorization of a M-by-N matrix (same as above)
+NB. geqrf  QR factorization of a M-by-N matrix (same as above)
+NB. gerqf  RQ factorization of a M-by-N matrix (same as above)
+NB. gehrd   reduce a general square matrix to upper
+NB.         Hessenberg form                    (same as above)
+NB. gelqf  LQ factorization of a M-by-N matrix (same as above)
+
+
+
+
 NB. gesvx   solves the system A * X = B (crashes J)
-NB. gels   solves overdetermined or underdetermined systems (does something)
 NB. gelss   computes the minimum norm solution to a linear (crashes J)
 NB.         least squares problem using the SVD
-NB. getrf LU factorization of a general M-by-N matrix (does something)
-NB. geqlf  QL factorization of a M-by-N matrix
-NB. geqrf  QR factorization of a M-by-N matrix (does something)
-NB. gerqf  RQ factorization of a M-by-N matrix 
-NB. heev   eigenvalues and eigenvectors of a square matrix (works)
-NB. potrf   Cholesky factorization of a symmetric (Hermitian) (part done)
-NB. trtrs   solves a triangular system A * X = B
-NB. gees   Schur factorization of a square matrix
-NB. gebal  balances a general square matrix
-NB. gehrd   reduce a general square matrix to upper
-NB.         Hessenberg form
-NB. gelqf  LQ factorization of a M-by-N matrix
-NB. potrf   Cholesky factorization of a symmetric (Hermitian)
-NB.         positive definite matrix
+NB. gebal  balances a general square matrix (dumps core)
+
+
 
 
 

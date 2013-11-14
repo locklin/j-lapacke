@@ -47,6 +47,7 @@ z2d=: [ ^: (-. @ -:) (9 & o.)
 mp=: +/ . *
 
 ROWMAJOR =: 101 NB. row major=101, col major = 102; global for LAPACKE row major
+COLMAJOR =: 102
 
 NB. =========================================================
 matchclean=: 0: *./ . = clean @ , @: -

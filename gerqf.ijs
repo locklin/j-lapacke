@@ -37,7 +37,7 @@ gerqf=: (2b1001&$: : (4 : 0)) " 0 2
 y=. z2d y
 ic=. iscomplex y
 zero=. ic {:: dzero ; zzero
-routine=. ic { 'dgerqf' ,: 'zgerqf'
+routine=. ic { 'LAPACKE_dgerqf' ,: 'LAPACKE_zgerqf'
 
 if. (-. 0 1 -: x I. 1 16) +. ((0 ~: #@$) +. (0 -: ]) +. (0 ~: L.)) x do.
   error routine;'RMASK should be an integer in range [1,15]'
@@ -51,16 +51,12 @@ d=. n-m
 a=. zero + |:y
 lda=. 1 >. m
 tau=. k $ zero
-lwork=. 1 >. 10 * m >. n
-work=. lwork$zero
-info=. izero
 
-arg=. 'm;n;a;lda;tau;work;lwork;info'
 
-(cutarg arg)=. routine call , each ".arg
+arg=. 'COLMAJOR;m;n;a;lda;tau' 
 
-if. info~:0 do.
-  error routine;'info result: ',":info return.
+if. n>0 do.
+(cutarg arg)=. routine lcall > each ".arg
 end.
 
 r=. h=. q=. izero

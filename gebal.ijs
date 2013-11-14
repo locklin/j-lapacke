@@ -62,7 +62,7 @@ gebal=: (2b1111&$: : (4 : 0)) " 0 2
 y=. z2d y
 ic=. iscomplex y
 zero=. ic {:: dzero ; zzero
-routine=. ic { 'dgebal' ,: 'zgebal'
+routine=. ic { 'LAPACKE_dgebal' ,: 'LAPACKE_zgebal'
 
 if. (-. 0 1 -: x I. 1 16) +. ((0 ~: #@$) +. (0 -: ]) +. (0 ~: L.)) x do.
   error routine;'RMASK should be an integer in range [1,15]'
@@ -77,14 +77,12 @@ lda=. 1 >. n
 ilo=. izero
 ihi=. izero
 scale=. n $ dzero
-info=. izero
 
-arg=. 'job;n;a;lda;ilo;ihi;scale;info'
 
-(cutarg arg)=. routine call , each ".arg
+arg=. 'COLMAJOR;job;n;a;lda;ilo;ihi;scale'
 
-if. info~:0 do.
-  error routine;'info result: ',":info return.
+if. n>0 do.
+(cutarg arg)=. routine lcall > each ".arg
 end.
 
 if. 2b1000 (17 b.) x do.
